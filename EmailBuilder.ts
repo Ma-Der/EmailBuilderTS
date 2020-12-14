@@ -11,7 +11,7 @@ interface IEmailBuilder {
 }
 
 export class EmailBuilder {
-  _email: IEmailBuilder;
+  private _email: IEmailBuilder;
   constructor(title: string = "") {
     this._email = {
       title,
@@ -22,34 +22,43 @@ export class EmailBuilder {
       html: ''
     };
   }
-  setFrom(mail: string) {
-    if (!Validation.isEmailValid(mail))
+  setFrom(email: string) {
+    if (!Validation.isEmailValid(email))
       throw new Error("Invalid email address.");
-    this._email.from = mail;
+    this._email.from = email;
     return this;
   }
-  setTo(...mail: string[]) {
-    mail.forEach((item) => {
-      if (!Validation.isEmailValid(item))
-        throw new Error("Invalid " + item + " address.");
+  setTo(...emails: string[]) {
+    emails.forEach((item) => {
       this._email.to.push(item);
+      if (!Validation.isEmailValid(item)) {
+        console.log("Invalid " + item + " address.");
+        const lastEmail = this._email.to.length-1;
+        this._email.to.splice(lastEmail, 1);
+      }
     });
+    
+    
     return this;
   }
 
   setCc(...cc: string[]) {
     cc.forEach((item) => {
-      if (!Validation.isEmailValid(item))
-        throw new Error("Invalid " + item + " address.");
-      this._email.cc.push(item);
+      if (!Validation.isEmailValid(item)) {
+        console.log("Invalid " + item + " address.");
+        const lastEmail = this._email.to.length-1;
+        this._email.to.splice(lastEmail, 1);
+      }
     });
     return this;
   }
   setBcc(...bcc: string[]) {
     bcc.forEach((item) => {
-      if (!Validation.isEmailValid(item))
-        throw new Error("Invalid " + item + " address.");
-      this._email.bcc.push(item);
+      if (!Validation.isEmailValid(item)) {
+        console.log("Invalid " + item + " address.");
+        const lastEmail = this._email.to.length-1;
+        this._email.to.splice(lastEmail, 1);
+      }
     });
     return this;
   }
