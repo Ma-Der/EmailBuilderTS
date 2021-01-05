@@ -44,6 +44,7 @@ export class EmailBuilder {
 
   setCc(...cc: string[]) {
     cc.forEach((item) => {
+      this._email.cc.push(item);
       if (!Validation.isEmailValid(item)) {
         console.log("Invalid " + item + " address.");
         const lastEmail = this._email.to.length-1;
@@ -54,6 +55,7 @@ export class EmailBuilder {
   }
   setBcc(...bcc: string[]) {
     bcc.forEach((item) => {
+      this._email.bcc.push(item);
       if (!Validation.isEmailValid(item)) {
         console.log("Invalid " + item + " address.");
         const lastEmail = this._email.to.length-1;
@@ -68,11 +70,11 @@ export class EmailBuilder {
     return this;
   }
   build(): Email {
-    if (this._email.from === undefined)
+    if (this._email.from.length === 0)
       throw new Error(
         "Can't send message without knowing from who it is going."
       );
-    if (this._email.to === undefined)
+    if (this._email.to.length === 0)
       throw new Error("Can't send messagge to noone.");
     return new Email(this._email.title, this._email.from, this._email.to, this._email.cc, this._email.bcc, this._email.html);
   }
